@@ -17,6 +17,7 @@
 #define LED_GPIO GPIO_NUM_8
 
 void app_main(void) {
+  // XIAO ESP32-C3 does not have built in LED.
   gpio_reset_pin(LED_GPIO);
   gpio_set_direction(LED_GPIO, GPIO_MODE_OUTPUT);
   gpio_set_level(LED_GPIO, 0);
