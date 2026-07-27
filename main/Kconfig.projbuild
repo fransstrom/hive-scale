@@ -19,4 +19,16 @@ menu "BeeScale Configuration"
         range 1 300
         default 30
 
+    config GPIO_HX711_SCK
+        int "SCK gpio pin for HX711 module"
+        range 1 12
+        default 4
+    
+    config GPIO_HX711_DOUT
+        int "DOUT gpio pin for HX711 module"
+        range 1 12
+        default 5
+
+
+
 endmenu

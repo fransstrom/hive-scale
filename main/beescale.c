@@ -5,10 +5,10 @@
 #include "esp_sleep.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
+#include "hx711_helper.h"
 #include "ota.h"
 #include "sdkconfig.h"
 #include "wifi.h"
-
 #define CYCLE_TAG "CYCLE"
 #define LED_GPIO GPIO_NUM_8
 
@@ -40,7 +40,7 @@ void app_main(void) {
   }
 
   // Do the measurements here - send to mqtt and all START
-
+  test();
   // Do the measurements here - send to mqtt and all END
 
   if (ota_check_is_due()) {
