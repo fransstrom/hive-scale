@@ -1,7 +1,7 @@
 #include "ota.h"
 
 #include <stdint.h>
-#include <string.h>
+#include <stdlib.h>
 
 #include "esp_app_desc.h"
 #include "esp_attr.h"
@@ -24,7 +24,49 @@ typedef struct {
   uint32_t wakes_since_check;
 } ota_schedule_t;
 
+typedef struct {
+  unsigned long major;
+  unsigned long minor;
+  unsigned long patch;
+} ota_version_t;
+
 static RTC_DATA_ATTR ota_schedule_t s_schedule;
+
+static bool parse_version(const char *text, ota_version_t *version) {
+  if (*text == 'v') {
+    text++;
+  }
+
+  char *end;
+  version->major = strtoul(text, &end, 10);
+  if (end == text || *end != '.') {
+    return false;
+  }
+
+  text = end + 1;
+  version->minor = strtoul(text, &end, 10);
+  if (end == text || *end != '.') {
+    return false;
+  }
+
+  text = end + 1;
+  version->patch = strtoul(text, &end, 10);
+  return end != text && (*end == '\0' || *end == '-' || *end == '+');
+}
+
+static int compare_versions(const ota_version_t *left,
+                            const ota_version_t *right) {
+  if (left->major != right->major) {
+    return left->major > right->major ? 1 : -1;
+  }
+  if (left->minor != right->minor) {
+    return left->minor > right->minor ? 1 : -1;
+  }
+  if (left->patch != right->patch) {
+    return left->patch > right->patch ? 1 : -1;
+  }
+  return 0;
+}
 
 bool ota_check_is_due(void) {
   const uint32_t interval = CONFIG_BEESCALE_OTA_CHECK_INTERVAL_WAKEUPS;
@@ -96,8 +138,18 @@ esp_err_t ota_check_for_update(void) {
     return err;
   }
 
-  if (strcmp(current_app->version, new_app.version) == 0) {
-    ESP_LOGI(TAG, "Firmware is current (%s)", current_app->version);
+  ota_version_t current_version;
+  ota_version_t new_version;
+  if (!parse_version(new_app.version, &new_version)) {
+    ESP_LOGE(TAG, "Release has an invalid version: %s", new_app.version);
+    esp_https_ota_abort(handle);
+    return ESP_ERR_INVALID_VERSION;
+  }
+
+  if (parse_version(current_app->version, &current_version) &&
+      compare_versions(&new_version, &current_version) <= 0) {
+    ESP_LOGI(TAG, "Skipping version %s; running version %s is not older",
+             new_app.version, current_app->version);
     esp_https_ota_abort(handle);
     return ESP_OK;
   }

@@ -37,8 +37,9 @@ https://github.com/fransstrom/hive-scale/releases/latest/download/beescale.bin
 
 The server certificate is validated with ESP-IDF's trusted certificate bundle.
 The image header is fetched first; the full image is downloaded only when its
-version differs from the running firmware. A completed update is validated,
-written to the inactive OTA slot, and booted after a restart.
+semantic version is newer than the running firmware. Release versions must use
+the `vMAJOR.MINOR.PATCH` format. A completed update is validated, written to the
+inactive OTA slot, and booted after a restart.
 
 Bootloader rollback is enabled. A newly installed image is marked valid only
 after it starts and receives an IP address. If it resets or enters deep sleep
@@ -91,4 +92,3 @@ each. The application must continue to fit in that limit.
 - [ ] Connect load cells
 - [ ] Add MQTT protocol
 - [ ] Add boot count
-
