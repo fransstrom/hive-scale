@@ -72,6 +72,7 @@ esp_err_t ota_check_for_update(void) {
 
   esp_http_client_config_t http_config = {
       .url = CONFIG_BEESCALE_OTA_URL,
+      .buffer_size_tx = 2048,
       .crt_bundle_attach = esp_crt_bundle_attach,
       .timeout_ms = 30000,
       .keep_alive_enable = true,
