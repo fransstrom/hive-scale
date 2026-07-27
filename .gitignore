@@ -4,7 +4,7 @@ __pycache__/
 
 # esp-idf built binaries
 build/
-build_*_*/
+build_*/
 sdkconfig
 sdkconfig.old
 managed_components

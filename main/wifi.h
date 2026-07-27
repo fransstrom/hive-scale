@@ -1,18 +1,13 @@
 #pragma once
 
-#include <stdbool.h>
-
 #include "esp_err.h"
+#include "freertos/FreeRTOS.h"
 
 /**
- * Initialize Wi-Fi station mode and start connecting.
+ * Initialize Wi-Fi station mode and start connecting with credentials from NVS.
  *
- * Call this once from app_main().
+ * A local build containing config.h seeds NVS when credentials are absent.
  */
-esp_err_t wifi_connect_start(const char *ssid, const char *password);
+esp_err_t wifi_connect_start(void);
+esp_err_t wifi_connect_wait(TickType_t timeout_ticks);
 esp_err_t wifi_connect_stop(void);
-
-/**
- * Returns true after the device has received an IP address.
- */
-bool wifi_connect_is_connected(void);

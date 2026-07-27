@@ -1,0 +1,22 @@
+menu "BeeScale Configuration"
+
+    config BEESCALE_OTA_URL
+        string "Firmware update URL"
+        default "https://github.com/fransstrom/hive-scale/releases/latest/download/beescale.bin"
+        help
+            HTTPS URL of the firmware image published as the latest release.
+
+    config BEESCALE_OTA_CHECK_INTERVAL_WAKEUPS
+        int "Wake cycles between OTA checks"
+        range 1 2147483647
+        default 1
+        help
+            Check every wake when set to 1. With the current one-minute sleep
+            interval, set this to 1440 to check approximately once per day.
+
+    config BEESCALE_WIFI_CONNECT_TIMEOUT_SECONDS
+        int "Wi-Fi connection timeout in seconds"
+        range 1 300
+        default 30
+
+endmenu
