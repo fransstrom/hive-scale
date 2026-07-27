@@ -91,3 +91,4 @@ each. The application must continue to fit in that limit.
 - [ ] Connect load cells
 - [ ] Add MQTT protocol
 - [ ] Add boot count
+
