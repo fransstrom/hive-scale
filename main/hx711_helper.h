@@ -1,3 +1,3 @@
 #pragma once
 #include "esp_err.h"
-esp_err_t test();
+esp_err_t hx711_test();

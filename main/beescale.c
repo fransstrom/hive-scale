@@ -6,10 +6,12 @@
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "hx711_helper.h"
+#include "mqtt_helper.h"
 #include "ota.h"
 #include "sdkconfig.h"
 #include "wifi.h"
 #define CYCLE_TAG "CYCLE"
+#define MQTT_TAG "MQTT"
 #define LED_GPIO GPIO_NUM_8
 
 void app_main(void) {
@@ -39,8 +41,14 @@ void app_main(void) {
     goto sleep;
   }
 
+  err = mqtt_init();
+  if (err != ESP_OK) {
+    ESP_LOGE(MQTT_TAG, "MQTT error %s", esp_err_to_name(err));
+    goto sleep;
+  }
+  ESP_LOGI(MQTT_TAG, "Connection established");
   // Do the measurements here - send to mqtt and all START
-  test();
+  hx711_test();
   // Do the measurements here - send to mqtt and all END
 
   if (ota_check_is_due()) {
@@ -57,6 +65,7 @@ sleep:
     ESP_LOGW(CYCLE_TAG, "Could not stop Wi-Fi cleanly: %s",
              esp_err_to_name(err));
   }
+
   ESP_LOGI(CYCLE_TAG, "WIFI OFF");
   ESP_ERROR_CHECK(esp_sleep_enable_timer_wakeup(1ULL * 60ULL * 1000000ULL));
   vTaskDelay(pdMS_TO_TICKS(20000));

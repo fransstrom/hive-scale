@@ -1,5 +1,6 @@
 #include "hx711.h"
 #include "lwip/err.h"
+#include "mqtt_helper.h"
 #include "sdkconfig.h"
 #include <esp_log.h>
 #include <freertos/FreeRTOS.h>
@@ -8,7 +9,7 @@
 #include <inttypes.h>
 
 static const char *TAG = "HX711";
-esp_err_t test() {
+esp_err_t hx711_test() {
 
   hx711_t dev = {.dout = CONFIG_GPIO_HX711_DOUT,
                  .pd_sck = CONFIG_GPIO_HX711_SCK,
@@ -33,7 +34,7 @@ esp_err_t test() {
     }
 
     ESP_LOGI(TAG, "Raw data: %" PRIi32, data);
-
+    mqtt_publish();
     vTaskDelay(pdMS_TO_TICKS(500));
   }
   return ERR_OK;

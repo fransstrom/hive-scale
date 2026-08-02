@@ -90,5 +90,5 @@ each. The application must continue to fit in that limit.
 ## TODO
 
 - [ ] Connect load cells
-- [ ] Add MQTT protocol
-- [ ] Add boot count
+- [x] Add MQTT protocol
+- [x] Add boot count
