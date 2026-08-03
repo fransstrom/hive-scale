@@ -7,6 +7,7 @@
 #include "hive.h"
 #include "mqtt_client.h"
 #include <stdint.h>
+#include <time.h>
 static const char *MQTT_TAG = "MQTT";
 
 static esp_mqtt_client_handle_t mqtt_client;
@@ -47,10 +48,10 @@ esp_err_t mqtt_init() {
   // Following config is required for MQTT over TLS
   const esp_mqtt_client_config_t mqtt_cfg = {
       .broker.address.hostname = MQTT_BROKER_URI,
-      .broker.address.port = 8883,
+      .broker.address.port = 1883,
       .credentials.username = MQTT_BROKER_USER,
       .credentials.authentication.password = MQTT_BROKER_PASS,
-      .broker.address.transport = MQTT_TRANSPORT_OVER_SSL,
+      .broker.address.transport = MQTT_TRANSPORT_OVER_TCP,
       .broker.verification.crt_bundle_attach = esp_crt_bundle_attach,
   };
 
@@ -61,8 +62,12 @@ esp_err_t mqtt_init() {
   return esp_mqtt_client_start(mqtt_client);
 }
 
-int mqtt_publish() {
-  const struct Hive_Measurement payload = {.weight = 90000, .deviceId = "1"};
+int mqtt_publish(float weight) {
+  const struct Hive_Measurement payload = {
+      .weight = weight,
+      .deviceId = "1",
+      .timestamp = (int64_t)time(NULL),
+  };
   char *json = hive_measurement_to_json(&payload);
   if (json == NULL) {
     ESP_LOGE(MQTT_TAG, "Could not serialize measurement");

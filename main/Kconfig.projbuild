@@ -17,7 +17,7 @@ menu "BeeScale Configuration"
     config BEESCALE_WIFI_CONNECT_TIMEOUT_SECONDS
         int "Wi-Fi connection timeout in seconds"
         range 1 300
-        default 30
+        default 300
 
     config GPIO_HX711_SCK
         int "SCK gpio pin for HX711 module"
@@ -25,9 +25,23 @@ menu "BeeScale Configuration"
         default 4
     
     config GPIO_HX711_DOUT
-        int "DOUT gpio pin for HX711 module"
+        int "DOUT gpio pin for HX710 module"
         range 1 12
         default 5
+
+    config HX711_ZERO_OFFSET
+        int "HX711 zero offset"
+        default 98200
+        help
+            Average raw reading with no load on the scale.
+
+    config HX711_COUNTS_PER_KG
+        int "HX711 counts per kilogram"
+        default 10500
+        help
+            Difference between the loaded and unloaded raw readings divided
+            by the known calibration weight in kilograms. This value may be
+            negative when the load cell polarity is reversed.
 
 
 

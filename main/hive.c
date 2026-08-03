@@ -12,7 +12,9 @@ char *hive_measurement_to_json(const struct Hive_Measurement *measurement) {
       cJSON_AddStringToObject(json, "deviceId", measurement->deviceId) ==
           NULL ||
       cJSON_AddNumberToObject(json, "weight_grams", measurement->weight) ==
-          NULL) {
+          NULL ||
+      cJSON_AddNumberToObject(json, "timestamp",
+                              (double)measurement->timestamp) == NULL) {
     cJSON_Delete(json);
     return NULL;
   }

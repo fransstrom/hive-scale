@@ -27,15 +27,18 @@ esp_err_t hx711_test() {
     }
 
     int32_t data;
-    r = hx711_read_average(&dev, 5U, &data);
+    r = hx711_read_average(&dev, 20U, &data);
     if (r != ESP_OK) {
       ESP_LOGE(TAG, "Could not read data: %d (%s)\n", r, esp_err_to_name(r));
       continue;
     }
-
+    // counts_per_kg = (loaded_raw - zero_offset) / known_weight_kg
+    float weight_grams = (float)(data - CONFIG_HX711_ZERO_OFFSET) * 1000.0f /
+                         CONFIG_HX711_COUNTS_PER_KG;
     ESP_LOGI(TAG, "Raw data: %" PRIi32, data);
-    mqtt_publish();
-    vTaskDelay(pdMS_TO_TICKS(500));
+    ESP_LOGI(TAG, "Weight: %.2f g", weight_grams);
+    mqtt_publish(weight_grams);
+    vTaskDelay(pdMS_TO_TICKS(3000));
   }
   return ERR_OK;
 }

@@ -6,7 +6,8 @@
 
 struct Hive_Measurement {
   const char *deviceId;
-  uint32_t weight;
+  float weight;
+  int64_t timestamp;
 };
 
 // The caller must release the returned string with cJSON_free().

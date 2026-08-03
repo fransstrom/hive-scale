@@ -9,6 +9,7 @@
 #include "mqtt_helper.h"
 #include "ota.h"
 #include "sdkconfig.h"
+#include "time_sync.h"
 #include "wifi.h"
 #define CYCLE_TAG "CYCLE"
 #define MQTT_TAG "MQTT"
@@ -33,6 +34,12 @@ void app_main(void) {
     goto sleep;
   }
   ESP_LOGI(CYCLE_TAG, "WIFI CONNECTED");
+
+  err = time_sync();
+  if (err != ESP_OK) {
+    ESP_LOGE(CYCLE_TAG, "Could not synchronize time: %s", esp_err_to_name(err));
+    goto sleep;
+  }
 
   err = ota_confirm_running_image();
   if (err != ESP_OK) {
