@@ -31,7 +31,7 @@ menu "BeeScale Configuration"
 
     config HX711_ZERO_OFFSET
         int "HX711 zero offset"
-        default 98200
+        default 99050
         help
             Average raw reading with no load on the scale.
 
