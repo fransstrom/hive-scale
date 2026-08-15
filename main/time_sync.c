@@ -9,7 +9,7 @@
 
 static const char *TAG = "time_sync";
 
-esp_err_t time_sync(void) {
+esp_err_t time_sync(TickType_t timeout_ticks) {
   const esp_sntp_config_t config =
       ESP_NETIF_SNTP_DEFAULT_CONFIG("pool.ntp.org");
 
@@ -18,7 +18,7 @@ esp_err_t time_sync(void) {
     return err;
   }
 
-  err = esp_netif_sntp_sync_wait(pdMS_TO_TICKS(15000));
+  err = esp_netif_sntp_sync_wait(timeout_ticks);
   esp_netif_sntp_deinit();
   if (err != ESP_OK) {
     return err;

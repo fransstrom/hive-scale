@@ -11,13 +11,31 @@ menu "BeeScale Configuration"
         range 1 2147483647
         default 1
         help
-            Check every wake when set to 1. With the current one-minute sleep
-            interval, set this to 1440 to check approximately once per day.
+            Check every wake when set to 1. With the default five-minute sleep
+            interval, set this to 288 to check approximately once per day.
 
-    config BEESCALE_WIFI_CONNECT_TIMEOUT_SECONDS
-        int "Wi-Fi connection timeout in seconds"
-        range 1 300
+    config BEESCALE_COMMUNICATION_RETRY_SECONDS
+        int "Total Wi-Fi and MQTT retry window in seconds"
+        range 1 1800
+        default 120
+        help
+            Maximum total time spent connecting Wi-Fi, synchronizing time,
+            connecting MQTT, and waiting for publish acknowledgements. Pending
+            measurements remain in flash when this window expires.
+
+    config BEESCALE_DEEP_SLEEP_SECONDS
+        int "Deep sleep duration in seconds"
+        range 1 86400
         default 300
+
+    config BEESCALE_MEASUREMENT_QUEUE_CAPACITY
+        int "Maximum queued measurements"
+        range 2016 2304
+        default 2304
+        help
+            2304 samples retain eight days of measurements at five-minute
+            intervals. A full queue preserves old, unacknowledged records and
+            reports an error instead of silently overwriting them.
 
     config GPIO_HX711_SCK
         int "SCK gpio pin for HX711 module"
