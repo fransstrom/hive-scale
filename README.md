@@ -86,9 +86,3 @@ Project settings are under `BeeScale Configuration` in `idf.py menuconfig`:
 
 The flash layout uses `ota_0` and `ota_1` application partitions of 1700 KB
 each. The application must continue to fit in that limit.
-
-## TODO
-
-- [ ] Connect load cells
-- [x] Add MQTT protocol
-- [x] Add boot count
