@@ -1,6 +1,42 @@
-# BeeScale
+# hive-scale
 
-ESP-IDF firmware for a battery-powered ESP32-C3 hive scale.
+ESP-IDF firmware for a battery-powered ESP32-C3 hive scale. The project is an
+ongoing prototype focused on reliable measurements, offline storage and a
+weather-resistant mechanical frame.
+
+![Prototype frame with four load cells](docs/images/prototype-overview.jpg)
+
+*Early bench prototype used to test load distribution across four load cells.*
+
+## System overview
+
+```text
+Load cells -> HX711 -> ESP32-C3 -> MQTT -> Node-RED -> InfluxDB -> Grafana
+```
+
+The ESP32-C3 reads the load cells through an HX711 amplifier and publishes the
+measurements over MQTT. Node-RED receives and routes the data, InfluxDB stores
+the time series, and Grafana presents it. The integration implementation saves
+measurements to NVS before attempting network communication, so unsent data can
+be retained during a connection outage.
+
+![Early test measurements in Grafana](docs/images/grafana-dashboard.png)
+
+*Early test measurements presented in Grafana through the NIG stack.*
+
+## Prototype and testing
+
+<img src="docs/images/prototype-electronics.jpg" alt="ESP32-C3, HX711 and battery prototype electronics" width="600">
+
+*ESP32-C3, HX711 and battery supply assembled for bench testing.*
+
+<img src="docs/images/load-test.jpg" alt="Hive scale prototype during a bench load test" width="600">
+
+*Temporary frame and test loads used while evaluating measurement stability.*
+
+The wooden frame is only a test fixture. The next step is a weather-resistant
+frame that transfers the hive's full weight through the load cells while
+protecting the electronics from moisture.
 
 ## Requirements
 
